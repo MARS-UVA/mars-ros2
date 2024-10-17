@@ -11,31 +11,25 @@ import cv2
 
 # Webcam Subscriber node which inherits the Node parent class from rclpy
 class Webcam(Node):
-    def __init__(self) -> None:
+    def __init__(self):
         super().__init__("webcam") # Calling parents class to assign node name 
-        #self.get_logger().info("webcam init")
-        self.publisher_ = self.create_publisher(Image, 'transformed_image_topic', 10)
-        self.imageSubscription = self.create_subscription(
-            Image,
-            'webcam_topic',
-            self.image_callback,
-            10
-        )
-        self.bridge = CvBridge()  #Instantiating a CVBridge instance
-
-    #Callback function called when a message is ready to be processed from the subscriber queue
-    def listener_callback(self, msg):
-        cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')  #Convert image to OpenCV matrix
-
-        cv2.imshow("Image", cv_image)
-        cv2.waitKey(1)
-    
+        self.publisher_ = self.create_publisher(Image, 'webcam_image', 10)
+        self.cap = cv2.VideoCapture(0)
+        self.bridge = CvBridge()
+    def publish_frame(self):
+        ret, frame = self.cap.read()
+        if ret:
+            img_msg = self.bridge.cv2_to_imgmsg(frame, encoding='bgr8')
+            self.publisher_.publish(img_msg)
+    def destroy_node(self):
+        super().destroy_node()# Release the video capture on node destruction
+        self.cap.release()
 # Main method is the first point of entry which instantiates an instance of the WebcamSubscriber class (a child of the Node class)
 def main(args=None):
     rclpy.init()
-    node = WebcamSubscriber()
+    node = Webcam()
     rclpy.spin(node)
-    cv2.destroyAllWindows()
+    node.destroy_node()
     rclpy.shutdown()
 
 if __name__ == "__main__":
