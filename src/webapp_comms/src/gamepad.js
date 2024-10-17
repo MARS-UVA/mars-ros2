@@ -14,15 +14,15 @@ window.addEventListener('gamepaddisconnected', e => {
  */
 const getButtonObjectFromGamepad = (gamepad) => {
     return {
-        x: gamepad.buttons[2].value,
-        y: gamepad.buttons[3].value
+        x: gamepad.buttons[3].value,
+        y: gamepad.buttons[2].value
     }
 }
 
 const getLeftStickFromGamepad = (gamepad) => {
     return {
         x: gamepad.axes[0],
-        y: gamepad.axes[1]
+        y: -gamepad.axes[1]
     }
 }
 
@@ -33,14 +33,21 @@ const getRighttickFromGamepad = (gamepad) => {
     }
 }
 
+const gamepadText = document.getElementById('gamepad-text')
+
 const intervalTime = 30
 
 setInterval(() => {
 
+    gamepads = navigator.getGamepads()
 
-    const output = {
-        leftStick: getLeftStickFromGamepad(gamepads[0]),
-        rightStick: getRighttickFromGamepad(gamepads[0]),
-        buttons: getButtonObjectFromGamepad(gamepads[0])
-    } // when we get out output method, we can send this object to it
+    if (gamepads[0] != null) {
+        const output = {
+            leftStick: getLeftStickFromGamepad(gamepads[0]),
+            rightStick: getRighttickFromGamepad(gamepads[0]),
+            buttons: getButtonObjectFromGamepad(gamepads[0])
+        } // when we get out output method, we can send this object to it
+
+        gamepadText.textContent = JSON.stringify(output, 2)
+    }
 }, intervalTime)
