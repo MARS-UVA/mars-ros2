@@ -3,9 +3,11 @@
 """
 A node for publishing information from a camera.
 
+Name: webcam
+
 Publishers
 =======
-webcam_image (type sensor_msgs.Image): BGR8 images from a webcam (QOS: 10).
+webcam_image (type sensor_msgs.msg.Image): BGR8 images from a webcam (QOS: 10).
 """
 
 # ROS Python Libraries
