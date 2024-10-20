@@ -7,6 +7,27 @@ window.addEventListener('gamepaddisconnected', e => {
     gamepads = navigator.getGamepads()
 })
 
+function detectBrowser() {
+    const userAgent = navigator.userAgent;
+  
+    if (userAgent.match(/chrome|chromium|crios/i)) {
+      return "Chrome";
+    } else if (userAgent.match(/firefox|fxios/i)) {
+      return "Firefox";
+    } else if (userAgent.match(/safari/i)) {
+      return "Safari";
+    } else if (userAgent.match(/msie|trident/i)) {
+      return "Internet Explorer";
+    } else if (userAgent.match(/edge\/\d+/i)) {
+      return "Microsoft Edge";
+    } else if (userAgent.match(/opera|opr/i)) {
+      return "Opera";
+    } else {
+      return "Unknown";
+    }
+  }
+  
+
 /**
  * 
  * @param {Gamepad} gamepad 
@@ -40,7 +61,7 @@ const getLeftStickFromGamepad = (gamepad) => {
     }
 }
 
-const getRighttickFromGamepad = (gamepad) => {
+const getRightStickFromGamepad = (gamepad) => {
     return {
         x: gamepad.axes[2],
         y: -gamepad.axes[3]
@@ -48,12 +69,21 @@ const getRighttickFromGamepad = (gamepad) => {
 }
 
 function vibrate(time, index = 0) {
-    return gamepads[index].vibrationActuator.playEffect("dual-rumble", {
-        startDelay: 0,
-        duration: time,
-        weakMagnitude: 1.0,
-        strongMagnitude: 1.0,
-    });
+    // would throw error if used outside chrome
+    const browser = detectBrowser()
+    switch (browser) {
+        case 'Chrome':
+        case 'Microsoft Edge':
+            return gamepads[index].vibrationActuator.playEffect("dual-rumble", {
+                startDelay: 0,
+                duration: time,
+                weakMagnitude: 1.0,
+                strongMagnitude: 1.0,
+            });
+        default:
+            console.error('Vibration not supported in used browser')
+            return { errMsg: 'Vibration not supported in used browser' }
+    }
 }
 vibrate(1000);
 
