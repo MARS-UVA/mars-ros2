@@ -94,7 +94,7 @@ const intervalTime = 30
 function getGamepadState(index = 0) {
     return {
             leftStick: getLeftStickFromGamepad(gamepads[index]),
-            rightStick: getRighttickFromGamepad(gamepads[index]),
+            rightStick: getRightStickFromGamepad(gamepads[index]),
             buttons: getButtonObjectFromGamepad(gamepads[index])
         } 
 }
@@ -106,7 +106,7 @@ setInterval(() => {
     if (gamepads[0] != null) {
         const output = {
             leftStick: getLeftStickFromGamepad(gamepads[0]),
-            rightStick: getRighttickFromGamepad(gamepads[0]),
+            rightStick: getRightStickFromGamepad(gamepads[0]),
             buttons: getButtonObjectFromGamepad(gamepads[0])
         } // when we get out output method, we can send this object to it
 
