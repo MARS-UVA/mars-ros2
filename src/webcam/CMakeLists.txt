@@ -36,7 +36,7 @@ endif()
 
 ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
-  scripts/webcam_code.py
+  scripts/webcam_publisher.py
   scripts/display.py
   DESTINATION lib/${PROJECT_NAME})
 
